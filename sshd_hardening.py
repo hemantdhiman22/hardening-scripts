@@ -20,9 +20,9 @@ HARDENED_SETTINGS = {
     "ClientAliveCountMax": "0",
     "IgnoreRhosts": "yes",
     "HostbasedAuthentication": "no",
+    "MACs": "hmac-sha2-512,hmac-sha2-256",
     "Ciphers": "aes256-gcm@openssh.com,aes128-gcm@openssh.com",
-    "KexAlgorithms": "curve25519-sha256,curve25519-sha256@libssh.org",
-    "MACs": "hmac-sha2-512,hmac-sha2-256"
+    "KexAlgorithms": "curve25519-sha256,curve25519-sha256@libssh.org"
 }
 
 def backup_config():
@@ -55,9 +55,6 @@ def check_existing_parameters():
 
 def update_config():
     call_existing_config = check_existing_parameters()
-    print(call_existing_config)
-    print("----------------------")
-    print("---------------------")
     update_config_line=[]
 
     striped_lines = []
@@ -77,17 +74,12 @@ def update_config():
             else:
                 update_config_line.append(i)
 
-    print("***********************")
-    print(update_config_line)
-
     for key, value in HARDENED_SETTINGS.items():
         if key not in call_existing_config:
             update_config_line.append(f"{key} {value}\n")
     
     with open(sshd_config, "w") as sshd_file:
         sshd_file.writelines(update_config_line)
-
-
 
 
 def restart_ssh_service():
